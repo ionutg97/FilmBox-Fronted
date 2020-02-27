@@ -1,10 +1,23 @@
 import React from "react";
 import styled from "styled-components";
 
+//import InputFile from "../componets/InputFile";
+
 const MyVideo = styled.video`
     width: 640px;
     height: 360px;
     border: solid 1px; 
+`;
+const InputFileArrea =styled.div`
+
+`;
+
+const InputFile = styled.input`
+    size :50px;
+`;
+
+const DisplayPath = styled.p`
+
 `;
 
 export class List extends React.Component {
@@ -85,6 +98,11 @@ export class List extends React.Component {
     xhr.send();
   };
 
+  onChange = (event) => {
+    console.log(document.getElementById("myFile").value);
+    document.getElementById("demo").innerHTML=document.getElementById("myFile").value;    
+}
+
 
   render() {
     return (
@@ -95,6 +113,14 @@ export class List extends React.Component {
           muted="muted"
           controls="true">
         </MyVideo>
+        <InputFileArrea>
+        Select a file to upload: <InputFile 
+        type="file" 
+        id="myFile"
+        onChange={this.onChange}>
+        </InputFile>
+        <DisplayPath id="demo"></DisplayPath >
+        </InputFileArrea>
       </React.Fragment>
     )
   };
