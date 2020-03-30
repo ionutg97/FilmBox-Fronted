@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import base64 from 'react-native-base64'
+
 
 //import InputFile from "../componets/InputFile";
 
@@ -8,7 +10,7 @@ const MyVideo = styled.video`
     height: 360px;
     border: solid 1px; 
 `;
-const InputFileArrea =styled.div`
+const InputFileArrea = styled.div`
 
 `;
 
@@ -28,22 +30,61 @@ export class List extends React.Component {
       mediaSource: null,
       video: null,
       sourceBuffer: null,
-      noFiles: 3
+      noFiles: 2,
+      listId: ["5e8239a633733a226f5367d5", "5e8239ab33733a226f5367d6"]
     }
   };
 
   componentDidMount() {
-    this.state.video = document.getElementById('myVideo');
-    this.state.video.crossOrigin = 'anonymous';
+    var queue = [];
+    this.fetch( 0, queue)
 
-    if ('MediaSource' in window && MediaSource.isTypeSupported(this.state.mimeCodec)) {
-      this.state.mediaSource = new MediaSource;
-      this.state.video.src = URL.createObjectURL(this.state.mediaSource);
-      this.state.mediaSource.addEventListener('sourceopen', this.sourceOpen);
-    } else {
-      console.error('Unsupported MIME type or codec: ', this.state.mimeCodec);
-    }
+    setTimeout(() => {
+      console.log("dsafdsfs");
+      this.state.video = document.getElementById('myVideo');
+      this.state.video.crossOrigin = 'anonymous';
+
+      if ('MediaSource' in window && MediaSource.isTypeSupported(this.state.mimeCodec)) {
+        this.state.mediaSource = new MediaSource;
+        this.state.video.src = URL.createObjectURL(this.state.mediaSource);
+        this.state.mediaSource.addEventListener('sourceopen', () => this.sourceOpen(queue));
+      } else {
+        console.error('Unsupported MIME type or codec: ', this.state.mimeCodec);
+      }
+
+    }, 5000);
   }
+
+
+  sourceOpen = (queue) => {
+    console.log(queue);
+    var newMediaSource = this.state.mediaSource;
+    this.state.sourceBuffer = newMediaSource.addSourceBuffer(this.state.mimeCodec);
+    //queue.shift();cd
+    this.state.sourceBuffer.appendBuffer(queue.shift());
+
+    this.state.sourceBuffer.addEventListener('updateend', () => {
+      if (queue.length) {
+        this.state.sourceBuffer.appendBuffer(queue.shift());
+      }
+    }, false);
+  };
+
+  fetch = (index,queue) => {
+    var url = `http://localhost:8087/mongo/video?video=${this.state.listId[index]}`;
+    var xhr = new XMLHttpRequest;
+    xhr.open('get', url);
+    xhr.responseType = 'json';
+    xhr.onload = () => {
+      var chunk = window.atob(xhr.response.videoChunck);
+      queue.push(chunk);
+      index++;
+      if (index == this.state.noFiles)
+        return;
+      this.fetch( index ,queue);
+    };
+    xhr.send();
+  };
 
   formatNumber(number) {
     if (number < 10)
@@ -55,53 +96,10 @@ export class List extends React.Component {
         return `${number}`;
   }
 
-  sourceOpen = () => {
-    let i = 1;
-    var queue = [];
-    let generateUrl = `http://localhost:8081/catalog/movie/out2.webm.${this.formatNumber(i)}`;
-    this.fetch(generateUrl, i, (buf, index) => {
-
-      queue.push(buf);
-      //queue[index] = buf;
-      //console.log(queue.slice(0));
-
-    });
-
-    setTimeout(() => {
-      var newMediaSource = this.state.mediaSource;
-      this.state.sourceBuffer = newMediaSource.addSourceBuffer(this.state.mimeCodec);
-      //queue.shift();
-      this.state.sourceBuffer.appendBuffer(queue.shift());
-
-      this.state.sourceBuffer.addEventListener('updateend', () => {
-        if (queue.length) {
-          this.state.sourceBuffer.appendBuffer(queue.shift());
-        }
-      }, false);
-    }, 2000);
-
-
-  };
-
-  fetch = (url, index, addToQueue) => {
-    var xhr = new XMLHttpRequest;
-    xhr.open('get', url);
-    xhr.responseType = 'arraybuffer';
-    xhr.onload = () => {
-      addToQueue(xhr.response, index);
-      let generateUrl = `http://localhost:8081/catalog/movie/out2.webm.${this.formatNumber(index + 1)}`;
-
-      if (index == this.state.noFiles)
-        return;
-      this.fetch(generateUrl, index + 1, addToQueue)
-    };
-    xhr.send();
-  };
-
   onChange = (event) => {
     console.log(document.getElementById("myFile").value);
-    document.getElementById("demo").innerHTML=document.getElementById("myFile").value;    
-}
+    document.getElementById("demo").innerHTML = document.getElementById("myFile").value;
+  }
 
 
   render() {
@@ -114,12 +112,12 @@ export class List extends React.Component {
           controls="true">
         </MyVideo>
         <InputFileArrea>
-        Select a file to upload: <InputFile 
-        type="file" 
-        id="myFile"
-        onChange={this.onChange}>
-        </InputFile>
-        <DisplayPath id="demo"></DisplayPath >
+          Select a file to upload: <InputFile
+            type="file"
+            id="myFile"
+            onChange={this.onChange}>
+          </InputFile>
+          <DisplayPath id="demo"></DisplayPath >
         </InputFileArrea>
       </React.Fragment>
     )

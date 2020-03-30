@@ -1,14 +1,15 @@
 import React from 'react';
-import List from './modules/dashbordFilm/container/List';
+import List1 from './modules/dashbordFilm/container/List1';
 import CommentBox from "../src/modules/dashbordFilm/componets/CommentBox";
 
 
 function App() {
   return (
     <div className="App">
-      <CommentBox>
+      <List1>
         
-      </CommentBox>
+      </List1>
+
     </div>
   );
 }
