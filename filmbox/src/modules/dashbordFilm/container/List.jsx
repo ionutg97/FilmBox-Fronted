@@ -40,7 +40,6 @@ export class List extends React.Component {
     this.fetch( 0, queue)
 
     setTimeout(() => {
-      console.log("dsafdsfs");
       this.state.video = document.getElementById('myVideo');
       this.state.video.crossOrigin = 'anonymous';
 
@@ -55,6 +54,25 @@ export class List extends React.Component {
     }, 5000);
   }
 
+  playVideo (){
+    console.log("play   .............");
+    var queue = [];
+    this.fetch( 0, queue)
+
+    setTimeout(() => {
+      this.state.video = document.getElementById('myVideo');
+      this.state.video.crossOrigin = 'anonymous';
+
+      if ('MediaSource' in window && MediaSource.isTypeSupported(this.state.mimeCodec)) {
+        this.state.mediaSource = new MediaSource;
+        this.state.video.src = URL.createObjectURL(this.state.mediaSource);
+        this.state.mediaSource.addEventListener('sourceopen', () => this.sourceOpen(queue));
+      } else {
+        console.error('Unsupported MIME type or codec: ', this.state.mimeCodec);
+      }
+
+    }, 5000);
+  }
 
   sourceOpen = (queue) => {
     console.log(queue);
@@ -74,10 +92,11 @@ export class List extends React.Component {
     var url = `http://localhost:8087/mongo/video?video=${this.state.listId[index]}`;
     var xhr = new XMLHttpRequest;
     xhr.open('get', url);
-    xhr.responseType = 'json';
+    xhr.responseType = 'arraybuffer';
     xhr.onload = () => {
-      var chunk = window.atob(xhr.response.videoChunck);
-      queue.push(chunk);
+     // var chunk = window.atob(xhr.response);
+      //var arrayBuff=this.str2ab(chunk);
+      queue.push(xhr.response);
       index++;
       if (index == this.state.noFiles)
         return;
@@ -101,6 +120,9 @@ export class List extends React.Component {
     document.getElementById("demo").innerHTML = document.getElementById("myFile").value;
   }
 
+  playVideo (){
+    console.log("play   .............");
+  }
 
   render() {
     return (
@@ -109,7 +131,15 @@ export class List extends React.Component {
           id="myVideo"
           autoplay="false"
           muted="muted"
-          controls="true">
+          controls="true"
+          onPlay={this.playVideo}>
+        </MyVideo>
+        <MyVideo
+          id="myVideo2"
+          autoplay="false"
+          muted="muted"
+          controls="true"
+          onPlay={this.playVideo}>
         </MyVideo>
         <InputFileArrea>
           Select a file to upload: <InputFile
@@ -118,6 +148,7 @@ export class List extends React.Component {
             onChange={this.onChange}>
           </InputFile>
           <DisplayPath id="demo"></DisplayPath >
+          <button onClick={this.playVideo}>Play Video</button>
         </InputFileArrea>
       </React.Fragment>
     )

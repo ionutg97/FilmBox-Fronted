@@ -67,6 +67,7 @@ export class List1 extends React.Component {
     });
 
     setTimeout(() => {
+      console.log(queue);
       var newMediaSource = this.state.mediaSource;
       this.state.sourceBuffer = newMediaSource.addSourceBuffer(this.state.mimeCodec);
       //queue.shift();
@@ -87,6 +88,7 @@ export class List1 extends React.Component {
     xhr.open('get', url);
     xhr.responseType = 'arraybuffer';
     xhr.onload = () => {
+      console.log(xhr.response);
       addToQueue(xhr.response, index);
       let generateUrl = `http://localhost:8081/catalog/movie/out2.webm.${this.formatNumber(index + 1)}`;
 
