@@ -127,6 +127,5 @@ export class List1 extends React.Component {
   };
 
 }
-
 export default List1;
 
