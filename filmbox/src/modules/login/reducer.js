@@ -3,7 +3,8 @@ import { combineReducers } from "redux";
 
 const initialEntitiesState = {
     type:"",
-    isAdmin:false
+    isAdmin:true,
+    isLoged: true
 };
 
 const loginReducer = (state = initialEntitiesState, action) => {
