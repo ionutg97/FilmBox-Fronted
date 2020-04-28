@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@stomp/stompjs": "^5.4.3",
+    "axios": "^0.19.2",
+    "crypto-js": "^4.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.11.0",
     "react-helmet": "^6.0.0",

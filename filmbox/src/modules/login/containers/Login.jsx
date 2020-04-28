@@ -4,8 +4,9 @@ import { bindActionCreators } from "redux";
 
 import { ButtonContainer } from '../components/CreateStudentStyleComp';
 import Button from '../components/Button';
-import TextInput from '../components/TextInput';
+import Input from '../components/Input';
 
+import {isAdmin} from '../../common/utils';
 import { login } from '../action/Action';
 
 export class Login extends React.Component {
@@ -113,30 +114,73 @@ export class Login extends React.Component {
         });
     }
 
+    isFormValid = () => {
+        if (
+          this.state.name == "" ||
+          this.state.password == ""
+        )
+          return false;
+        return true;
+      };
+      
+    saveForm = () => {
+        const { login } = this.props;
+        if (this.isFormValid()) 
+        {
+            //console.log(this.state.name + " "+ this.state.password)
+            login(
+               this.state.name,
+                this.state.password,
+            {})
+            .then(() => {
+            if (this.props.isLogged) this.click();
+            else
+            {
+                this.setState(
+                    console.log(this.state)
+                    //{
+                    // errors: {
+                    //     ...errors,
+                    //     name: "Username or password is wrong!"
+                    // }
+                    //}
+                )
+            }
+          })//.bind(this.state);
+        }
+      };
+    
+      click = () => {
+        if (isAdmin()) this.props.history.push("/notification");
+        else this.props.history.push("/account/video");
+      };
+
     render() {
         return (
             <div>
-                <TextInput
+                <Input
                     label="User Name"
+                    type="text"
                     error={this.state.errors.name}
                     onChange={this.onChangeName}
                     onBlur={this.verifyInputName}
                     value={this.state.name}
                 >
-                </TextInput>
-                <TextInput
+                </Input>
+                <Input
                     label="Password"
+                    type="password"
                     error={this.state.errors.password}
                     onChange={this.onChangePassword}
                     onBlur={this.verifyInputPassword}
                     value={this.state.password}
-                    type="password"
+                   
                 >
-                </TextInput>
+                </Input>
                 <ButtonContainer>
                     <Button
                         background={this.state.backgroundSaveBtn}
-                        onClick={this.doLogin}
+                        onClick={this.saveForm}
                     >
                         Login
                     </Button>
@@ -154,12 +198,18 @@ export class Login extends React.Component {
     }
 
 }
-// function mapDispatchToProps(dispatch) {
-//     return {
-//         dispatch,
-//         ...bindActionCreators({ login }, dispatch)
-//     }
-// }
+function mapDispatchToProps(dispatch) {
+    return {
+        dispatch,
+        ...bindActionCreators({ login }, dispatch)
+    }
+}
+
+const mapStateToProps = state => ({ 
+    isLogged: state.login.login.isLogged,
+    role:state.login.login.role
+  });
+  
 
 
-export default connect(null, null)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

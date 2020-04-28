@@ -12,7 +12,7 @@ user-select: none;
 `;
 
 const StyledTextInput = styled.input.attrs(props => ({
-    type: "text"
+    type: props.type
 }))`
     border: ${props => props.isValid ? "1px solid #C7D0DA" : "1px solid red"};
     width:100%;
@@ -42,7 +42,7 @@ margin-bottom: 0.75rem;
 margin-left: 1rem;
 `
 
-export class TextInput extends React.Component {
+export class Input extends React.Component {
 
     isInputValid = () => {
         return this.props.error === null || this.props.error === "";
@@ -53,6 +53,7 @@ export class TextInput extends React.Component {
       <React.Fragment>
         <StyledLabel>{this.props.label}</StyledLabel>
         <StyledTextInput
+          type={this.props.type}
           placeholder={`Enter ${this.props.label.toLowerCase()}`}
           onChange={this.props.onChange}
           onBlur={this.props.onBlur}
@@ -67,4 +68,4 @@ export class TextInput extends React.Component {
   }
 }
 
-export default TextInput;
+export default Input;

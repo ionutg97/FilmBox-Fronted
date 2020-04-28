@@ -3,8 +3,8 @@ import { combineReducers } from "redux";
 
 const initialEntitiesState = {
     type:"",
-    isAdmin:true,
-    isLoged: true
+    role:null,
+    isLogged: false
 };
 
 const loginReducer = (state = initialEntitiesState, action) => {
@@ -12,12 +12,13 @@ const loginReducer = (state = initialEntitiesState, action) => {
         case "LOGIN": {
             return {
                 ...state,
-                isAdmin: action.payload.isAdmin
+                isAdmin: action.payload.isAdmin,
+                isLogged: action.payload.isLogged,
+                role: action.payload.role
             }
         }
         default: {
             return state;
-
         }
     }
 }
