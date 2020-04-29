@@ -8,6 +8,9 @@ export class Explore extends React.Component {
     render() {
         return(
             <React.Fragment>
+                <div>
+                    <p>Ionut</p>
+                </div>
             </React.Fragment>
         );
         }

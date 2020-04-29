@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import React from 'react';
 import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
 
 import { ButtonContainer } from '../components/CreateStudentStyleComp';
 import Button from '../components/Button';
@@ -22,6 +23,11 @@ export class Login extends React.Component {
             backgroundSaveBtn: "#FF8F74"
         }
     }
+    static propTypes = {
+        match: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired
+      };
 
     onChange = (fieldName, value) => {
         this.setState({
@@ -151,8 +157,11 @@ export class Login extends React.Component {
       };
     
       click = () => {
-        if (isAdmin()) this.props.history.push("/notification");
-        else this.props.history.push("/account/video");
+        const { match, location, history } = this.props;
+      
+          console.log("dsd",history);
+        // if (isAdmin()) this.context.history.push("/notification");
+        // else this.context.history.push("/account/video");
       };
 
     render() {

@@ -1,26 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import base64 from 'react-native-base64'
-
-
-//import InputFile from "../componets/InputFile";
+import base64 from 'react-native-base64';
+import {UploadFile} from '../componets/UploadMovie';
 
 const MyVideo = styled.video`
     width: 640px;
     height: 360px;
     border: solid 1px; 
 `;
-const InputFileArrea = styled.div`
 
-`;
-
-const InputFile = styled.input`
-    size :50px;
-`;
-
-const DisplayPath = styled.p`
-
-`;
 
 export class List extends React.Component {
   constructor(props) {
@@ -115,10 +103,6 @@ export class List extends React.Component {
         return `${number}`;
   }
 
-  onChange = (event) => {
-    console.log(document.getElementById("myFile").value);
-    document.getElementById("demo").innerHTML = document.getElementById("myFile").value;
-  }
 
   playVideo (){
     console.log("play   .............");
@@ -127,7 +111,8 @@ export class List extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <MyVideo
+        {/*<UploadFile></UploadFile>
+         <MyVideo
           id="myVideo"
           autoplay="false"
           muted="muted"
@@ -140,16 +125,7 @@ export class List extends React.Component {
           muted="muted"
           controls="true"
           onPlay={this.playVideo}>
-        </MyVideo>
-        <InputFileArrea>
-          Select a file to upload: <InputFile
-            type="file"
-            id="myFile"
-            onChange={this.onChange}>
-          </InputFile>
-          <DisplayPath id="demo"></DisplayPath >
-          <button onClick={this.playVideo}>Play Video</button>
-        </InputFileArrea>
+        </MyVideo> */}
       </React.Fragment>
     )
   };

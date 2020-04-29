@@ -10,20 +10,17 @@ class Navigation extends Component {
 
     logout = () => {
         console.log("Logout")
-        // this.setState({
-        //   menuOpen: !this.state.menuOpen
-        // });
+        
+        localStorage.removeItem("jwt");
+        localStorage.removeItem("loggedUserId");
+        localStorage.removeItem("role");
 
-        // localStorage.removeItem("jwt");
-        // localStorage.removeItem("loggedUserId");
-        // localStorage.removeItem("role");
-
-        // this.props.history.push("/login");
+        this.props.history.push("/login");
     };
 
 
     isAdmin = () => {
-        if (this.props.isLoged && this.props.isAdmin) {
+        if (this.props.isLogged && this.props.role==="admin") {
             return (
                 <StyledNavigationMenu>
 
@@ -52,7 +49,7 @@ class Navigation extends Component {
 
             )
         }
-        else if(this.props.isLoged){    
+        else if(this.props.isLogged && this.props.role==="user"){    
            return(
                 <StyledNavigationMenu>
                 <li>
@@ -95,7 +92,7 @@ class Navigation extends Component {
 }
 const mapStateToProps = state => ({
     type: state.login.login.type,
-    isAdmin: state.login.login.isAdmin,
-    isLoged: state.login.login.isLoged
+    role: state.login.login.role,
+    isLogged: state.login.login.isLogged
 })
 export default connect(mapStateToProps, null)(Navigation);
