@@ -19,7 +19,7 @@ export class List extends React.Component {
       video: null,
       sourceBuffer: null,
       noFiles: 2,
-      listId: ["5e8239a633733a226f5367d5", "5e8239ab33733a226f5367d6"]
+      listId: ["5eac06f6d9aece2920f4bcc3", "5eac06f7d9aece2920f4bcc4"]
     }
   };
 
@@ -59,7 +59,7 @@ export class List extends React.Component {
         console.error('Unsupported MIME type or codec: ', this.state.mimeCodec);
       }
 
-    }, 5000);
+    }, 2000);
   }
 
   sourceOpen = (queue) => {
@@ -77,9 +77,10 @@ export class List extends React.Component {
   };
 
   fetch = (index,queue) => {
-    var url = `http://localhost:8087/mongo/video?video=${this.state.listId[index]}`;
+    var url = `http://localhost:8088/mongo/video?video=${this.state.listId[index]}`;
     var xhr = new XMLHttpRequest;
     xhr.open('get', url);
+    xhr.setRequestHeader("Authorization", localStorage.getItem("jwt"))
     xhr.responseType = 'arraybuffer';
     xhr.onload = () => {
      // var chunk = window.atob(xhr.response);
@@ -111,7 +112,7 @@ export class List extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {/*<UploadFile></UploadFile>
+        <UploadFile></UploadFile>
          <MyVideo
           id="myVideo"
           autoplay="false"
@@ -119,7 +120,7 @@ export class List extends React.Component {
           controls="true"
           onPlay={this.playVideo}>
         </MyVideo>
-        <MyVideo
+        {/* <MyVideo
           id="myVideo2"
           autoplay="false"
           muted="muted"

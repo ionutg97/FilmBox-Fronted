@@ -1,22 +1,14 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { NavLink } from "react-router-dom";
+import { bindActionCreators } from "redux";
+
 
 import { StyledNavigation, StyledNavigationMenu } from "./Navigation.style.jsx";
+import {logout} from '../login/action/Action';
 
 
 class Navigation extends Component {
-
-
-    logout = () => {
-        console.log("Logout")
-        
-        localStorage.removeItem("jwt");
-        localStorage.removeItem("loggedUserId");
-        localStorage.removeItem("role");
-
-        this.props.history.push("/login");
-    };
 
 
     isAdmin = () => {
@@ -63,7 +55,7 @@ class Navigation extends Component {
                      </NavLink>
                  </li>
                  <li>
-                     <NavLink onClick={this.logout} to="/login" activeClassName="active">
+                     <NavLink onClick={this.props.logout} to="/login" activeClassName="active">
                          Logout
                      </NavLink>
                  </li>
@@ -95,4 +87,12 @@ const mapStateToProps = state => ({
     role: state.login.login.role,
     isLogged: state.login.login.isLogged
 })
-export default connect(mapStateToProps, null)(Navigation);
+
+function mapDispatchToProps(dispatch) {
+    return {
+        dispatch,
+        ...bindActionCreators({ logout }, dispatch)
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);

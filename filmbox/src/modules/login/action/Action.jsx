@@ -20,8 +20,11 @@ const parseJWT = jwt => {
 
 export const login = (nameUser, passwordUser) => {
     return dispatch => {
+        var bcrypt = require('bcryptjs');
+        var hashPassword = bcrypt.hashSync(passwordUser, 4);
+     //   console.log("password",hashPassword);
         return axios
-        .post(`http://localhost:8091/api/login`, {username:nameUser,password:passwordUser})
+        .post(`http://localhost:8091/api/login`, {username:nameUser,password:"$2y$04$Gnmp8QkS/dhNg31LusB/gOsLyCf0GcdZaqJq4iLw5Ci.SeudrS2KC"})
         .then(response => {
           console.log(response.headers.Authorization)
             let parsedJson = JSON.parse(
@@ -52,3 +55,14 @@ export const login = (nameUser, passwordUser) => {
             });
     };
 }
+
+
+export const logout = () => {
+  console.log("Logout")
+  
+  localStorage.removeItem("jwt");
+  localStorage.removeItem("loggedUserId");
+  localStorage.removeItem("role");
+
+  this.props.history.push("/login");
+};

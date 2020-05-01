@@ -3,7 +3,7 @@ import { Redirect,BrowserRouter,Route, Switch } from 'react-router-dom';
 import {Helmet} from 'react-helmet';
 import { connect } from 'react-redux';
 
-//import List from '../dashbordFilm/container/List';
+import List from '../dashbordFilm/container/List';
 import UploadFile from '../dashbordFilm/componets/UploadMovie';
 import FirstPage from '../login/containers/FirstPage';
 import {isLoggedin} from '../common/utils';
@@ -27,7 +27,7 @@ const Body = () => (
             <PrivateRoute  path="/account/video" Component={List} loggedIn={isLoggedin} />
             <PrivateRoute  path="/explore/video" Component={Explore} loggedIn={isLoggedin} /> */}
             <Route exect path="/notification" component={Explore}></Route>
-            <Route  exect path="/account/video" component={UploadFile}></Route>
+            <Route  exect path="/account/video" component={List}></Route>
             <Route  exect path="/explore/video" component={Explore}></Route>
             <Route  exect path="/login" component={FirstPage} />
         {/*<Redirect to="/explore/video" />*/}
