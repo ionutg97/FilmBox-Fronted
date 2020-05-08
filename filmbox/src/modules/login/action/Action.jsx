@@ -63,6 +63,5 @@ export const logout = () => {
   localStorage.removeItem("jwt");
   localStorage.removeItem("loggedUserId");
   localStorage.removeItem("role");
-
-  this.props.history.push("/login");
+  return;
 };

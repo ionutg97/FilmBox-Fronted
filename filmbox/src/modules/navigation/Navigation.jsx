@@ -10,8 +10,17 @@ import {logout} from '../login/action/Action';
 
 class Navigation extends Component {
 
+    doLogout = () => {
+        {this.props.dispatch(logout())};
+        console.log("here")
+        this.props.history.push("/login");
+        
+        console.log("here")
+    }
 
     isAdmin = () => {
+
+        console.log("navigation",this.props)
         if (this.props.isLogged && this.props.role==="admin") {
             return (
                 <StyledNavigationMenu>
@@ -33,7 +42,7 @@ class Navigation extends Component {
                      </NavLink>
                  </li>
                  <li>
-                     <NavLink onClick={this.logout} to="/login" activeClassName="active">
+                     <NavLink onClick={this.doLogout} to="/login" activeClassName="active">
                          Logout
                      </NavLink>
                  </li>
@@ -55,7 +64,7 @@ class Navigation extends Component {
                      </NavLink>
                  </li>
                  <li>
-                     <NavLink onClick={this.props.logout} to="/login" activeClassName="active">
+                     <NavLink onClick={this.doLogout} to="/login" activeClassName="active">
                          Logout
                      </NavLink>
                  </li>

@@ -17,3 +17,12 @@ export const POST = (url, data, crossDomain = true) => {
             crossDomain
         });
 };
+
+export const GET = (url, crossDomain = true) => {
+    return axios
+        .get(url, {
+            headers: { "Authorization": `Bearer ${localStorage.getItem("jwt")}` },
+            crossDomain
+        })
+
+};

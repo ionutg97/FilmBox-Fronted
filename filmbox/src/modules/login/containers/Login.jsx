@@ -133,7 +133,6 @@ export class Login extends React.Component {
         const { login } = this.props;
         if (this.isFormValid()) 
         {
-            //console.log(this.state.name + " "+ this.state.password)
             login(
                this.state.name,
                 this.state.password,
@@ -152,16 +151,14 @@ export class Login extends React.Component {
                     //}
                 )
             }
-          })//.bind(this.state);
+          })
         }
       };
     
-      click = () => {
-        const { match, location, history } = this.props;
-      
-          console.log("dsd",history);
-        // if (isAdmin()) this.context.history.push("/notification");
-        // else this.context.history.push("/account/video");
+      click = () => {      
+          console.log("click after login() -> ",this.props.history);
+        if (isAdmin()) this.props.history.push("/notification");
+        else this.props.history.push("/account/video");
       };
 
     render() {
@@ -221,4 +218,6 @@ const mapStateToProps = state => ({
   
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+  export default 
+      connect(mapStateToProps, mapDispatchToProps)
+      (Login)

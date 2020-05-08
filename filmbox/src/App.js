@@ -7,10 +7,10 @@ import Body from './modules/navigation/Body';
 function App() {
   return (
     <React.Fragment>
-      <BrowserRouter>
+      
         <Navigation />
         <Body></Body>
-      </BrowserRouter>
+    
     </React.Fragment>
   );
 }

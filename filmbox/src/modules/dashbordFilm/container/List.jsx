@@ -114,19 +114,21 @@ export class List extends React.Component {
       <React.Fragment>
         <UploadFile></UploadFile>
          <MyVideo
+          poster="download.png"
           id="myVideo"
           autoplay="false"
           muted="muted"
           controls="true"
           onPlay={this.playVideo}>
         </MyVideo>
-        {/* <MyVideo
-          id="myVideo2"
+        <MyVideo
+          id="myVideo3"
           autoplay="false"
           muted="muted"
           controls="true"
-          onPlay={this.playVideo}>
-        </MyVideo> */}
+          poster="C:\Users\ionut\OneDrive\Documents\Licenta\FilmBox Frontend\FilmBox-Fronted\filmbox\src\modules\dashbordFilm\container\download.png"
+          >
+        </MyVideo>
       </React.Fragment>
     )
   };
