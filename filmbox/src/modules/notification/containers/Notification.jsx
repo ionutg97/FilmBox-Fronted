@@ -4,13 +4,13 @@ import { bindActionCreators } from "redux";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css"
 
-import {getMovies} from '../action/Action';
+import {getMovies,getAllIdChunck} from '../action/Action';
 
 export class Notification extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            urlGetMovie: "http://localhost:8088/mongo?video=",
+            urlGetMovie: "http://localhost:8088/mongo?video="
         }
     }
 
@@ -18,6 +18,12 @@ export class Notification extends React.Component {
         {this.props.getMovies()}
     }
 
+    setVideoId = (data) =>{
+        const words = data.split('video=');
+        this.props.getAllIdChunck(words[1],this.props);
+        
+    }
+    
     render() {
     const columns =[
         {
@@ -39,7 +45,9 @@ export class Notification extends React.Component {
             Header: "Number Chunk",
             accessor: "numberOfFiles",
             sortable: false,
-            filterable: false
+            filterable: false,
+            width: 30,
+            maxWidth:30,
         },
         {
             Header: "Total Size",
@@ -51,12 +59,15 @@ export class Notification extends React.Component {
             Header: "Action",
             Cell: props =>{
                 return (
-                    <button className="">Delete</button>
+                    <div>
+                        <button className="">Delete</button>
+                        <button className="" onClick={()=>this.setVideoId(props.original.videoId)}>View</button>
+                    </div>
                 )
             },
             sortable: false,
             filterable: false,
-            width: 80,
+            width: 100,
             maxWidth:100,
             minWidth:100
         }
@@ -80,7 +91,7 @@ export class Notification extends React.Component {
 function mapDispatchToProps(dispatch) {
     return {
         dispatch,
-        ...bindActionCreators({ getMovies }, dispatch)
+        ...bindActionCreators({ getMovies, getAllIdChunck}, dispatch)
     }
 }
 
@@ -90,6 +101,6 @@ const mapStateToProps = state => ({
   
 
 
-  export default 
-      connect(mapStateToProps, mapDispatchToProps)
-      (Notification)
+export default 
+    connect(mapStateToProps, mapDispatchToProps)
+    (Notification)

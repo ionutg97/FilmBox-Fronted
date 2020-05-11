@@ -1,7 +1,9 @@
 import { combineReducers } from "redux";
 
 const initialEntitiesState = {
-   movies:[]
+   movies:[],
+   allIdChunck:[],
+   error:""
 };
 
 const notificationReducer = (state = initialEntitiesState, action) => {
@@ -10,6 +12,18 @@ const notificationReducer = (state = initialEntitiesState, action) => {
             return {
                 ...state,
                 movies: action.payload.movies
+            }
+        }
+        case "GET_ALL_ID_CHUNCKS": {
+            return {
+                ...state,
+                allIdChunck: action.payload.allIdChunck
+            }
+        }
+        case "ERROR":{
+            return {
+                ...state,
+                error: action.payload.error
             }
         }
         default: {

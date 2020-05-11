@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import base64 from 'react-native-base64';
+import { connect } from 'react-redux';
+
 import {UploadFile} from '../componets/UploadMovie';
 
 const MyVideo = styled.video`
@@ -18,12 +19,21 @@ export class List extends React.Component {
       mediaSource: null,
       video: null,
       sourceBuffer: null,
-      noFiles: 2,
-      listId: ["5eac06f6d9aece2920f4bcc3", "5eac06f7d9aece2920f4bcc4"]
+      // noFiles: 0,
+      // listId:[]
+      noFiles: 5,
+     // listId: ["5eac06f6d9aece2920f4bcc3", "5eac06f7d9aece2920f4bcc4"]
+     listId: ["5eb860e9ad92f02084c8025d","5eb860ebad92f02084c8025e","5eb860ebad92f02084c8025f","5eb860eead92f02084c80260","5eb860eead92f02084c80261","5eb860f0ad92f02084c80262"]
     }
   };
 
   componentDidMount() {
+    if(this.props.allIdChunck.length>0)
+    {
+      this.state.noFiles=this.props.allIdChunck.length;
+      this.state.listId= this.props.allIdChunck
+    }
+
     var queue = [];
     this.fetch( 0, queue)
 
@@ -77,6 +87,7 @@ export class List extends React.Component {
   };
 
   fetch = (index,queue) => {
+  
     var url = `http://localhost:8088/mongo/video?video=${this.state.listId[index]}`;
     var xhr = new XMLHttpRequest;
     xhr.open('get', url);
@@ -87,7 +98,7 @@ export class List extends React.Component {
       //var arrayBuff=this.str2ab(chunk);
       queue.push(xhr.response);
       index++;
-      if (index == this.state.noFiles)
+      if (index == (this.state.noFiles-1))
         return;
       this.fetch( index ,queue);
     };
@@ -114,24 +125,20 @@ export class List extends React.Component {
       <React.Fragment>
         <UploadFile></UploadFile>
          <MyVideo
-          poster="download.png"
           id="myVideo"
           autoplay="false"
           muted="muted"
           controls="true"
           onPlay={this.playVideo}>
         </MyVideo>
-        <MyVideo
-          id="myVideo3"
-          autoplay="false"
-          muted="muted"
-          controls="true"
-          poster="C:\Users\ionut\OneDrive\Documents\Licenta\FilmBox Frontend\FilmBox-Fronted\filmbox\src\modules\dashbordFilm\container\download.png"
-          >
-        </MyVideo>
+        
       </React.Fragment>
     )
   };
 
 }
-export default List
+const mapStateToProps = state => ({
+  allIdChunck: state.notification.notification.allIdChunck
+});
+
+export default connect(mapStateToProps,null)(List)  

@@ -54,7 +54,6 @@ getLabelText() {
 
 onChange = (event) => {
     const file = event.target.files[0];
-    console.log(event.target.files[0])
     let fileError = null;
     let format = file.name.split('.');
     let extension = format[format.length-1];
@@ -95,6 +94,10 @@ getFileNames = () => {
     return null;
 }
 
+uploadVideo = () =>{
+    console.log("C:\\Users\\ionut\\OneDrive\\Documents\\Licenta\\Backend\\Repository\\FilmBox\\discovery-server\\videos\\"+this.state.selectedFile);
+}
+
 deleteCallback = () => {
     this.setState({ uploadedFile: null });
     this.props.onChange({
@@ -113,6 +116,7 @@ render() {
                 <HiddenInput id="file" onChange={this.onChange} name={this.props.name} type="file" />
                 <StyledUploadInput id="input" htmlFor="file" onBlur={this.props.onBlur} isValid={this.isInputValid()}>{this.getLabelText()}</StyledUploadInput>
                 <UploadButton htmlFor="file" isValid={this.isInputValid()}>Browse</UploadButton>
+                <UploadButton isValid={true} onClick={this.uploadVideo}>Upload</UploadButton>
             </FileInputContainer>
             <InputHint><br />Formats supported: WEBM</InputHint>
             
