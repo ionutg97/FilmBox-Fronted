@@ -1,20 +1,23 @@
 import React from 'react';
-import { Redirect,BrowserRouter,Route, Switch } from 'react-router-dom';
-import {Helmet} from 'react-helmet';
-import { connect } from 'react-redux';
+import { Redirect, BrowserRouter, Route, Switch, withRouter } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
-import List from '../dashbordFilm/container/List';
-import UploadFile from '../dashbordFilm/componets/UploadMovie';
+import List from '../dashboardFilm/container/List';
 import FirstPage from '../login/containers/FirstPage';
-import {isLoggedin} from '../common/utils';
-import Explore from '../dashbordFilm/container/Explore';
+import { isLoggedin } from '../common/utils';
+import Explore from '../dashboardFilm/container/Explore';
 import Notification from '../notification/containers/Notification';
+import ChatBox from '../dashboardFilm/componets/ChatBox';
 
 const PrivateRoute = ({ Component, path, loggedIn }) => (
     <Route path={path}
         render={(props) => {
-            console.log("props",props);
-            return loggedIn() ? <Component {...props}/> : <Redirect to="/login" />;
+            if(loggedIn()){
+                console.log("aaiiii") 
+                return(<Component {...props} />)
+            }
+            else
+                return(<Redirect to="/login" />)
         }}
     />
 )
@@ -22,18 +25,20 @@ const PrivateRoute = ({ Component, path, loggedIn }) => (
 
 const Body = () => (
     <div>
-        <Helmet bodyAttributes={{style: 'background-color : #C0C0C0'}}/>
+        <Helmet bodyAttributes={{ style: 'background-color : #C0C0C0' }} />
         <BrowserRouter>
-        <Switch>
-            {/* <PrivateRoute  path="/notification" Component={Explore} loggedIn={isLoggedin}/>
-            <PrivateRoute  path="/account/video" Component={List} loggedIn={isLoggedin} />
-            <PrivateRoute  path="/explore/video" Component={Explore} loggedIn={isLoggedin} /> */}
-            <Route exect path="/notification" component={Notification}></Route>
-            <Route  exect path="/account/video" component={List}></Route>
-            <Route  exect path="/explore/video" component={Explore}></Route>
-            <Route  path="/login" component={FirstPage} />
-        {/*<Redirect to="/explore/video" />*/}
-        </Switch>
+            <Switch>
+{/* 
+            {<PrivateRoute exact path="/notification" Component={Notification} loggedIn={isLoggedin} />
+            <PrivateRoute exact path="/account/video" Component={List} loggedIn={isLoggedin} />
+            <PrivateRoute exact path="/chat/video" Component={ChatBox} loggedIn={isLoggedin} />
+            <Route path="/login" component={FirstPage} />} */}
+
+                <Route exect path="/notification" component={Notification}></Route>
+                <Route exect path="/account/video" component={Explore}></Route>
+                <Route exect path="/chat/video" component={ChatBox}></Route>
+                <Route path="/login" component={FirstPage}></Route>
+            </Switch>
         </BrowserRouter>
     </div  >
 );

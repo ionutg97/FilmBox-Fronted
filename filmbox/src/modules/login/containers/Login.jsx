@@ -8,7 +8,7 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 
 import {isAdmin} from '../../common/utils';
-import { login } from '../action/Action';
+import { login,getProfile } from '../action/Action';
 
 export class Login extends React.Component {
     constructor(props) {
@@ -156,7 +156,8 @@ export class Login extends React.Component {
       };
     
       click = () => {      
-          console.log("click after login() -> ",this.props.history);
+         // console.log("click after login() -> ",this.props.history);
+         getProfile();
         if (isAdmin()) this.props.history.push("/notification");
         else this.props.history.push("/account/video");
       };
@@ -204,12 +205,17 @@ export class Login extends React.Component {
     }
 
 }
-function mapDispatchToProps(dispatch) {
-    return {
-        dispatch,
-        ...bindActionCreators({ login }, dispatch)
-    }
-}
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         dispatch,
+//         ...bindActionCreators({ login,getProfile}, dispatch)
+//     }
+// }
+
+const mapDispatchToProps = dispatch => ({
+    login: (name, password,{}) => dispatch(login(name,password,{})),
+    getProfile: () => dispatch(getProfile())    
+});
 
 const mapStateToProps = state => ({ 
     isLogged: state.login.login.isLogged,

@@ -8,7 +8,6 @@ import Login from '../containers/Login';
 export class FirstPage extends React.Component {
 
     render(){
-        console.log("fP",this.props.history);
         return (
             <GeneralContainer>
                 <Login 
@@ -20,4 +19,4 @@ export class FirstPage extends React.Component {
         )};
 }
 
-export default FirstPage;
+export default withRouter(FirstPage);

@@ -1,16 +1,39 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import axios from "axios";
+    
 import SockJS from "sockjs-client"
 import Stomp from "@stomp/stompjs"
 import { Client } from '@stomp/stompjs';
 
-export class CommentBox extends React.Component {
+export class ChatBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             stompClient: null,
-            client: null
+            client: null,
+            nameClient:null
         }
     }
+
+    componentDidMount=()=>{
+        this.getProfile();
+    }
+
+    getProfile = () => {
+          console.log("gete",localStorage.getItem("loggedUserId"))
+          return axios
+          .get(`http://localhost:8091/user/${localStorage.getItem("loggedUserId")}/profile`, {
+              headers: { "Authorization": `Bearer ${localStorage.getItem("jwt")}` }
+          })
+          .then(response => {
+             this.state.nameClient = response.data.name; 
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    } 
+      
 
     connect = () => {
         var Stomp = require('stompjs');
@@ -49,8 +72,9 @@ export class CommentBox extends React.Component {
     sendMessage = () => {
         var from = document.getElementById('from').value;
         var text = document.getElementById('text').value;
+        console.log(this.state.nameClient)
         this.state.stompClient.send("/app/comment", {},
-            JSON.stringify({ 'content': text, 'idUser': 6789, 'idMovie': 12345 }));
+            JSON.stringify({ 'content': text, 'idUser':from, 'idMovie': 12345 }));
     }
 
     showMessageOutput = (messageOutput) => {
@@ -69,7 +93,7 @@ export class CommentBox extends React.Component {
             <React.Fragment>
                 <div>
                     <div>
-                        <input type="text" id="from" placeholder="Choose a nickname" />
+                        <input type="text" id="from" placeholder="Choose a nickname">{this.state.nameClient}</input>
                     </div>
                     <br />
                     <div>
@@ -89,4 +113,8 @@ export class CommentBox extends React.Component {
         )
     }
 }
-export default CommentBox;
+const mapStateToProps = state => ({
+    movies: state.notification.notification.movies
+  });
+export default connect(mapStateToProps, null)
+(ChatBox);

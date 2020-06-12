@@ -1,4 +1,6 @@
 import React from "react";  
+import {withRouter} from 'react-router-dom';
+
 
 export class Explore extends React.Component {
     constructor(props) {
@@ -16,4 +18,4 @@ export class Explore extends React.Component {
         }
 }
 
-export default Explore;
+export default withRouter(Explore);

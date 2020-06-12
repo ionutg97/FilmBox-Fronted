@@ -1,8 +1,10 @@
 import React from 'react';
-//import  ImageIcon from '../../assets/add_box_24px.svg';
-//import FileList from './FileList';
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+
 import { StyledLabel, HiddenInput, StyledUploadInput, InputHint, StyledEditError, UploadButton, FileInputContainer } from './UserFileInputMovieStyledComps';
-//import { readFile, getResumeFileName } from '../../containers/UserEdit/edit-page/Utils';
+
+import {uploadVideo} from '../actions/Action';
 
 export const getFileBase64Extension = (fileBase64) => {
     if (fileBase64 !== null && fileBase64 !== undefined) {
@@ -94,8 +96,13 @@ getFileNames = () => {
     return null;
 }
 
-uploadVideo = () =>{
-    console.log("C:\\Users\\ionut\\OneDrive\\Documents\\Licenta\\Backend\\Repository\\FilmBox\\discovery-server\\videos\\"+this.state.selectedFile);
+uploadVideoFunction = () =>{
+    this.props.uploadVideo("C:\\Users\\ionut\\OneDrive\\Documents\\Licenta\\Backend\\Repository\\FilmBox\\discovery-server\\videos\\"+this.state.selectedFile);
+    // if(this.props.error!=="")
+    //     this.state.error = this.props.error;
+    // else
+    // this.state.error= "Succesfully upload!";
+
 }
 
 deleteCallback = () => {
@@ -116,7 +123,7 @@ render() {
                 <HiddenInput id="file" onChange={this.onChange} name={this.props.name} type="file" />
                 <StyledUploadInput id="input" htmlFor="file" onBlur={this.props.onBlur} isValid={this.isInputValid()}>{this.getLabelText()}</StyledUploadInput>
                 <UploadButton htmlFor="file" isValid={this.isInputValid()}>Browse</UploadButton>
-                <UploadButton isValid={true} onClick={this.uploadVideo}>Upload</UploadButton>
+                <UploadButton isValid={true} onClick={this.uploadVideoFunction}>Upload</UploadButton>
             </FileInputContainer>
             <InputHint><br />Formats supported: WEBM</InputHint>
             
@@ -126,4 +133,10 @@ render() {
 }
 
 }
-export default InputFile;
+function mapDispatchToProps(dispatch) {
+    return {
+        dispatch,
+        ...bindActionCreators({uploadVideo}, dispatch)
+    }
+}
+export default connect(null,mapDispatchToProps)(InputFile);

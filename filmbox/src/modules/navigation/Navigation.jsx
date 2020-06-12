@@ -1,72 +1,74 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import { NavLink } from "react-router-dom";
-import { bindActionCreators } from "redux";
-
+import { Link }  from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import { StyledNavigation, StyledNavigationMenu } from "./Navigation.style.jsx";
-import {logout} from '../login/action/Action';
-
 
 class Navigation extends Component {
 
+
     doLogout = () => {
-        {this.props.dispatch(logout())};
-        console.log("here")
+        localStorage.removeItem("jwt");
+        localStorage.removeItem("loggedUserId");
+        localStorage.removeItem("role");
         this.props.history.push("/login");
-        
-        console.log("here")
+        window.location.reload(false);
     }
 
-    isAdmin = () => {
+    headerView = (path) => {
+    //this.props.history.push(path);
+    //window.location.reload(false);
+    }
 
-        console.log("navigation",this.props)
-        if (this.props.isLogged && this.props.role==="admin") {
+
+    isAdmin = () => {
+        if (localStorage.getItem("role")==="admin") {
             return (
                 <StyledNavigationMenu>
 
                 <li>
-                    <NavLink to="/notification" activeClassName="active">
+                    <Link to="/notification" onClick={()=>{this.headerView("/notification")}}  >
                         Notification
-                    </NavLink>
+                    </Link>
                 </li>
                  
                  <li>
-                     <NavLink to="/account/video" activeClassName="active">
+                     <Link to="/account/video" onClick={()=>{this.headerView("/account/video")}}>
                          Video
-                     </NavLink>
+                     </Link>
                  </li>
                  <li>
-                     <NavLink to="/explore/video" activeClassName="active">
-                         Explore
-                     </NavLink>
+                     <Link to="/chat/video" onClick={()=>{this.headerView("/chat/video")}}>
+                         Chat
+                     </Link>
                  </li>
                  <li>
-                     <NavLink onClick={this.doLogout} to="/login" activeClassName="active">
+                     <Link onClick={this.doLogout} to="/login"> 
                          Logout
-                     </NavLink>
+                     </Link>
                  </li>
                  </StyledNavigationMenu>
 
             )
         }
-        else if(this.props.isLogged && this.props.role==="user"){    
+        else if(localStorage.getItem("role")==="user"){    
            return(
                 <StyledNavigationMenu>
                 <li>
-                     <NavLink to="/account/video" activeClassName="active">
+                     <Link to="/account/video" onClick={()=>{this.headerView("/account/video")}} >
                          Video
-                     </NavLink>
+                     </Link>
                  </li>
                  <li>
-                     <NavLink to="/explore/video" activeClassName="active">
-                         Explore
-                     </NavLink>
+                     <Link to="/chat/video" onClick={()=>{this.headerView("/chat/video")}}>
+                         Chat
+                     </Link>
                  </li>
                  <li>
-                     <NavLink onClick={this.doLogout} to="/login" activeClassName="active">
+                     <Link onClick={this.doLogout} to="/login">
                          Logout
-                     </NavLink>
+                     </Link>
                  </li>
                 </StyledNavigationMenu>
            );
@@ -74,8 +76,8 @@ class Navigation extends Component {
         
         else return (<StyledNavigationMenu>
                 <li>
-                     <NavLink to="/login" activeClassName="active">
-                     </NavLink>
+                     <Link to="/login">
+                     </Link>
                  </li>
              </StyledNavigationMenu>);
     }
@@ -84,7 +86,7 @@ class Navigation extends Component {
         return (
             <StyledNavigation>
 
-                    {this.isAdmin()}
+            {this.isAdmin()}
                     
             </StyledNavigation>
 
@@ -97,11 +99,4 @@ const mapStateToProps = state => ({
     isLogged: state.login.login.isLogged
 })
 
-function mapDispatchToProps(dispatch) {
-    return {
-        dispatch,
-        ...bindActionCreators({ logout }, dispatch)
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
+export default withRouter(connect(mapStateToProps, null)(Navigation));

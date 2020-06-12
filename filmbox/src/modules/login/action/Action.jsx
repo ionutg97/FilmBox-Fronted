@@ -1,7 +1,7 @@
 
 import sha256 from 'crypto-js/sha256';
 import axios from "axios";
-import {POST} from '../../common/utils';
+import {POST,GET} from '../../common/utils';
 
 const parseJWT = jwt => {
     var base64Url = jwt.split(".")[1];
@@ -16,7 +16,27 @@ const parseJWT = jwt => {
     );
   
     return JSON.parse(jsonPayload);
-  };
+};
+
+export const getProfile = () => {
+  console.log("here")
+  return dispatch => {
+    console.log("gete",localStorage.getItem("loggedUserId"))
+    return axios
+    .get(`http://localhost:8091/user/${localStorage.getItem("loggedUserId")}/profile`, {
+        headers: { "Authorization": `Bearer ${localStorage.getItem("jwt")}` }
+    })
+    .then(response => dispatch({
+        type: "PROFILE",
+        payload: {
+          name:response.data.name
+        }
+    }))
+    .catch(err => {
+      console.log(err);
+    });
+  } 
+}
 
 export const login = (nameUser, passwordUser) => {
     return dispatch => {
@@ -40,7 +60,7 @@ export const login = (nameUser, passwordUser) => {
             localStorage.setItem("jwt", data.jwt);
             localStorage.setItem("role", data.role);
             localStorage.setItem("loggedUserId", data.id);
-    
+
             dispatch({
               type: "LOGIN",
               payload: {
@@ -55,13 +75,3 @@ export const login = (nameUser, passwordUser) => {
             });
     };
 }
-
-
-export const logout = () => {
-  console.log("Logout")
-  
-  localStorage.removeItem("jwt");
-  localStorage.removeItem("loggedUserId");
-  localStorage.removeItem("role");
-  return;
-};

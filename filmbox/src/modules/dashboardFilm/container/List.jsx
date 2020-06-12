@@ -3,11 +3,15 @@ import styled from "styled-components";
 import { connect } from 'react-redux';
 
 import {UploadFile} from '../componets/UploadMovie';
+import CommentaryBox from '../container/CommentaryBox';
 
 const MyVideo = styled.video`
     width: 640px;
     height: 360px;
     border: solid 1px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 
@@ -21,7 +25,7 @@ export class List extends React.Component {
       sourceBuffer: null,
       // noFiles: 0,
       // listId:[]
-      noFiles: 5,
+      noFiles: 6,
      // listId: ["5eac06f6d9aece2920f4bcc3", "5eac06f7d9aece2920f4bcc4"]
      listId: ["5eb860e9ad92f02084c8025d","5eb860ebad92f02084c8025e","5eb860ebad92f02084c8025f","5eb860eead92f02084c80260","5eb860eead92f02084c80261","5eb860f0ad92f02084c80262"]
     }
@@ -76,7 +80,6 @@ export class List extends React.Component {
     console.log(queue);
     var newMediaSource = this.state.mediaSource;
     this.state.sourceBuffer = newMediaSource.addSourceBuffer(this.state.mimeCodec);
-    //queue.shift();cd
     this.state.sourceBuffer.appendBuffer(queue.shift());
 
     this.state.sourceBuffer.addEventListener('updateend', () => {
@@ -94,11 +97,9 @@ export class List extends React.Component {
     xhr.setRequestHeader("Authorization", localStorage.getItem("jwt"))
     xhr.responseType = 'arraybuffer';
     xhr.onload = () => {
-     // var chunk = window.atob(xhr.response);
-      //var arrayBuff=this.str2ab(chunk);
       queue.push(xhr.response);
       index++;
-      if (index == (this.state.noFiles-1))
+      if (index == (this.state.noFiles))
         return;
       this.fetch( index ,queue);
     };
@@ -131,6 +132,8 @@ export class List extends React.Component {
           controls="true"
           onPlay={this.playVideo}>
         </MyVideo>
+
+        <CommentaryBox></CommentaryBox>
         
       </React.Fragment>
     )
