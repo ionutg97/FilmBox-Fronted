@@ -6,10 +6,7 @@ function App() {
   return (
 
     <React.Fragment>
-      
-        <Navigation />
         <Body></Body>
-    
     </React.Fragment>
   );
 }

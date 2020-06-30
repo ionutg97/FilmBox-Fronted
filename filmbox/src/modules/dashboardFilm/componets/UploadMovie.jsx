@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import InputFile from '../componets/InputFile';
 
-const InputFileArrea =styled.div` 
+export const InputFileArrea =styled.div` 
     display: flex;
     justify-content: center;
     align-items: center;

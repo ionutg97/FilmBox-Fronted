@@ -26,3 +26,5 @@ export const GET = (url, crossDomain = true) => {
         })
 
 };
+
+//export const DELETE = (url,)

@@ -1,10 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import axios from "axios";
-    
+//import { NativeModules, Platform } from 'react-native'   
+
 import SockJS from "sockjs-client"
 import Stomp from "@stomp/stompjs"
 import { Client } from '@stomp/stompjs';
+import Navigation from '../../navigation/Navigation';
+import {InputFileArrea} from '../componets/UploadMovie';
+
 
 export class ChatBox extends React.Component {
     constructor(props) {
@@ -12,11 +16,14 @@ export class ChatBox extends React.Component {
         this.state = {
             stompClient: null,
             client: null,
-            nameClient:null
+            nameClient:null,
+            //Aes:NativeModules.Aes,
+            key:null 
         }
     }
 
     componentDidMount=()=>{
+        //this.generateKey("film","film","",128)
         this.getProfile();
     }
 
@@ -34,6 +41,48 @@ export class ChatBox extends React.Component {
           });
     } 
       
+ 
+    // generateKey = (password, salt, cost, length) => {
+    //    this.state.key=NativeModules.Aes.pbkdf2(password, salt, cost, length);
+    // }
+     
+    // encryptData = (text, key) => {
+    //     return NativeModules.Aes.randomKey(16).then(iv => {
+    //         return NativeModules.Aes.encrypt(text, key, iv).then(cipher => ({
+    //             cipher,
+    //             iv,
+    //         }))
+    //     })
+    // }
+
+    // decryptData = (encryptedData, key) => NativeModules.Aes.decrypt(encryptedData.cipher, key, encryptedData.iv)
+ 
+// try {
+//     generateKey('Arnold', 'salt', 5000, 256).then(key => {
+//         console.log('Key:', key)
+//         encryptData('These violent delights have violent ends', key)
+//             .then(({ cipher, iv }) => {
+//                 console.log('Encrypted:', cipher)
+ 
+//                 decryptData({ cipher, iv }, key)
+//                     .then(text => {
+//                         console.log('Decrypted:', text)
+//                     })
+//                     .catch(error => {
+//                         console.log(error)
+//                     })
+ 
+//                 Aes.hmac256(cipher, key).then(hash => {
+//                     console.log('HMAC', hash)
+//                 })
+//             })
+//             .catch(error => {
+//                 console.log(error)
+//             })
+//     })
+// } catch (e) {
+//     console.error(e)
+// }
 
     connect = () => {
         var Stomp = require('stompjs');
@@ -72,9 +121,11 @@ export class ChatBox extends React.Component {
     sendMessage = () => {
         var from = document.getElementById('from').value;
         var text = document.getElementById('text').value;
-        console.log(this.state.nameClient)
+        //console.log(this.state.nameClient)
+       // console.log(this.encryptData(text,this.state.key)," ->>> ",this.state.key)
         this.state.stompClient.send("/app/comment", {},
-            JSON.stringify({ 'content': text, 'idUser':from, 'idMovie': 12345 }));
+            JSON.stringify({ 'content': text, 'idUser':localStorage.getItem("loggedUserId"), 'idMovie': 12345 }));
+        document.getElementById('text').innerHTML="";    
     }
 
     showMessageOutput = (messageOutput) => {
@@ -91,6 +142,8 @@ export class ChatBox extends React.Component {
     render() {
         return (
             <React.Fragment>
+                <Navigation/>
+                <InputFileArrea>
                 <div>
                     <div>
                         <input type="text" id="from" placeholder="Choose a nickname">{this.state.nameClient}</input>
@@ -109,6 +162,7 @@ export class ChatBox extends React.Component {
                         <p id="response"></p>
                     </div>
                 </div>
+                </InputFileArrea>
             </React.Fragment>
         )
     }

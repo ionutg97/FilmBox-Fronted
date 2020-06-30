@@ -2,8 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { connect } from 'react-redux';
 
-import {UploadFile} from '../componets/UploadMovie';
+import {UploadFile,InputFileArrea} from '../componets/UploadMovie';
+
 import CommentaryBox from '../container/CommentaryBox';
+import Navigation from '../../navigation/Navigation';
 
 const MyVideo = styled.video`
     width: 640px;
@@ -23,11 +25,10 @@ export class List extends React.Component {
       mediaSource: null,
       video: null,
       sourceBuffer: null,
-      // noFiles: 0,
-      // listId:[]
-      noFiles: 6,
-     // listId: ["5eac06f6d9aece2920f4bcc3", "5eac06f7d9aece2920f4bcc4"]
-     listId: ["5eb860e9ad92f02084c8025d","5eb860ebad92f02084c8025e","5eb860ebad92f02084c8025f","5eb860eead92f02084c80260","5eb860eead92f02084c80261","5eb860f0ad92f02084c80262"]
+      noFiles: 3,
+      //noFiles: 6,
+      listId: ["5ef5054036d1a00001ac29df", "5ef5054136d1a00001ac29e0","5ef5054236d1a00001ac29e1"]
+     //listId: ["5ee491f932b84f060057fadb","5ee491fb32b84f060057fadc","5ee491fc32b84f060057fadd","5ee491fd32b84f060057fade","5ee491fd32b84f060057fadf","5ee4920132b84f060057fae0"]
     }
   };
 
@@ -124,17 +125,20 @@ export class List extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <Navigation></Navigation>
         <UploadFile></UploadFile>
-         <MyVideo
-          id="myVideo"
-          autoplay="false"
-          muted="muted"
-          controls="true"
-          onPlay={this.playVideo}>
-        </MyVideo>
-
-        <CommentaryBox></CommentaryBox>
-        
+        <InputFileArrea>
+          <MyVideo
+            id="myVideo"
+            autoplay="false"
+            muted="muted"
+            controls="true"
+            onPlay={this.playVideo}>
+          </MyVideo>
+        </InputFileArrea>
+        <InputFileArrea>
+          <CommentaryBox></CommentaryBox>
+        </InputFileArrea>
       </React.Fragment>
     )
   };

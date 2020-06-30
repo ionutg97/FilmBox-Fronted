@@ -16,10 +16,7 @@ class Navigation extends Component {
         window.location.reload(false);
     }
 
-    headerView = (path) => {
-    //this.props.history.push(path);
-    //window.location.reload(false);
-    }
+    
 
 
     isAdmin = () => {
@@ -28,23 +25,23 @@ class Navigation extends Component {
                 <StyledNavigationMenu>
 
                 <li>
-                    <Link to="/notification" onClick={()=>{this.headerView("/notification")}}  >
+                    <Link to={'/notification'} >
                         Notification
                     </Link>
                 </li>
                  
                  <li>
-                     <Link to="/account/video" onClick={()=>{this.headerView("/account/video")}}>
+                     <Link to={'/account/video'}>
                          Video
                      </Link>
                  </li>
                  <li>
-                     <Link to="/chat/video" onClick={()=>{this.headerView("/chat/video")}}>
+                     <Link to={'/chat/video'}>
                          Chat
                      </Link>
                  </li>
                  <li>
-                     <Link onClick={this.doLogout} to="/login"> 
+                     <Link onClick={this.doLogout} to={"/login"}> 
                          Logout
                      </Link>
                  </li>
@@ -56,12 +53,12 @@ class Navigation extends Component {
            return(
                 <StyledNavigationMenu>
                 <li>
-                     <Link to="/account/video" onClick={()=>{this.headerView("/account/video")}} >
+                     <Link to="/account/video">
                          Video
                      </Link>
                  </li>
                  <li>
-                     <Link to="/chat/video" onClick={()=>{this.headerView("/chat/video")}}>
+                     <Link to="/chat/video" >
                          Chat
                      </Link>
                  </li>
@@ -93,10 +90,6 @@ class Navigation extends Component {
         );
     }
 }
-const mapStateToProps = state => ({
-    type: state.login.login.type,
-    role: state.login.login.role,
-    isLogged: state.login.login.isLogged
-})
 
-export default withRouter(connect(mapStateToProps, null)(Navigation));
+
+export default withRouter(Navigation);

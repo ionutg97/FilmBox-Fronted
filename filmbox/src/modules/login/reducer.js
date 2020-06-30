@@ -21,7 +21,7 @@ const loginReducer = (state = initialEntitiesState, action) => {
         case "PROFILE": {
             return {
                 ...state,
-                name:action.payload.name
+                name: action.payload.name
             }
         }
         default: {

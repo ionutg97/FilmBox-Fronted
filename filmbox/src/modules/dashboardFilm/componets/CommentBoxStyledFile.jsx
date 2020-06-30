@@ -4,6 +4,7 @@ import styled from 'styled-components';
 //$nc-blue: #00BDFC;
 //$nc-bl-dark: #0093C4;
 //$red: #FC3F00;
+//$light-grey: #C0C0C0;
 
 // body {
 //   font-family: 'PT Sans', sans-serif;
@@ -29,9 +30,9 @@ export const ButtonComm = styled.button`
 `;
 
 export const CommentBox = styled.div`
-  max-width: 37.5rem;
+  width: 620px;
   color: #fff;
-  background-color: #909090;
+  background-color: #C0C0C0;
   border-radius: 0.875rem;
   padding: 0.2rem 1rem 2rem;
 `;

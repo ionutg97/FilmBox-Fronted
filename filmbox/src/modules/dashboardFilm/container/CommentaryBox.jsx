@@ -1,6 +1,9 @@
 import React from "react";
+import { connect } from 'react-redux';
 import {withRouter} from 'react-router-dom';
 
+import {getAllComm,saveComment} from '../actions/Action';
+import {getProfile} from '../../login/action/Action';
 
 import {CommentFooterDelete,CommentFooter,CommentBody,
     Comment,CommentReveal,CommentCount,CommentFormAction,
@@ -20,8 +23,13 @@ class CommentaryBox extends React.Component {
         ]
       };
     }
+
+    componentDidMount () {
+      this.props.getProfile();
+    }
     
     render () {
+      getAllComm(this.props.idMovie);
       const comments = this._getComments();
       let commentNodes;
       let buttonText = 'Show Comments';
@@ -34,7 +42,11 @@ class CommentaryBox extends React.Component {
       return(
         <CommentBox>
           <h2>Join the Discussion!</h2>
-          <CommentaryForm addComment={this._addComment.bind(this)}/>
+          <CommentaryForm 
+            addComment={this._addComment.bind(this)}
+            name={this.props.name} 
+            idMovie={this.props.idMovie}
+          />
           <CommentReveal onClick={this._handleClick.bind(this)}>
             {buttonText}
           </CommentReveal>
@@ -86,10 +98,11 @@ class CommentaryBox extends React.Component {
   
   class CommentaryForm extends React.Component {
     render() {
+      console.log("props",this.props.name)
       return (
         <CommentForm onSubmit={this._handleSubmit.bind(this)}>
           <CommentFormField>
-            <Input placeholder="Name" required ref={(input) => this._author = input}></Input><br />
+            <Input placeholder={this.props.name} readonly ref={(input) => this._author = this.props.name} defaultValue={this.props.name}></Input><br />
             <Textarea placeholder="Comment" rows="4" required ref={(textarea) => this._body = textarea}></Textarea>
           </CommentFormField>
           <CommentFormAction>
@@ -99,12 +112,12 @@ class CommentaryBox extends React.Component {
       );
     } // end render
     
-    _handleSubmit(event) { 
+    _handleSubmit = (event)=> { 
       event.preventDefault();   // prevents page from reloading on submit
       let author = this._author;
       let body = this._body;
+      saveComment(body.value,localStorage.getItem("loggedUserId"),this.props.idMovie)
       this.props.addComment(author.value, body.value);
-      author.value="";
       body.value="";
     }
   } // end CommentForm component
@@ -126,4 +139,13 @@ class CommentaryBox extends React.Component {
     }
   }
   
-  export default withRouter(CommentaryBox);
+  const mapStateToProps = state => ({
+    idMovie: state.notification.notification.idMovie,
+    name: state.login.login.name
+  });
+
+  const mapDispatchToProps = dispatch => ({
+    getProfile: () => dispatch(getProfile())    
+});
+
+  export default connect(mapStateToProps,mapDispatchToProps)(CommentaryBox);

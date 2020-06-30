@@ -156,8 +156,7 @@ export class Login extends React.Component {
       };
     
       click = () => {      
-         // console.log("click after login() -> ",this.props.history);
-         getProfile();
+        this.props.getProfile();
         if (isAdmin()) this.props.history.push("/notification");
         else this.props.history.push("/account/video");
       };

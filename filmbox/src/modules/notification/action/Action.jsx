@@ -26,7 +26,10 @@ export const getMovies = () => {
         .then(response => {
           dispatch({
             type: "GET_ALL_ID_CHUNCKS",
-            payload: { allIdChunck: response.data }
+            payload: { 
+              allIdChunck: response.data,
+              idMovie: idMovie 
+             }
           });
           props.history.push("/account/video")
         })
@@ -38,3 +41,21 @@ export const getMovies = () => {
         );
     };
   };
+
+  export const getUserInfoById = (id) => {
+    console.log("id ->",id)
+     GET(`http://localhost:8091/user/${id}/profile`)
+      .then(response => { 
+       console.log(response.data)
+       return response.data
+      })
+      .then(data =>{
+        var obj = JSON.parse(data)
+        console.log("dsa",obj)
+        return obj;
+      })
+      .catch(err => {
+        console.log(err);
+       // return 0;
+      });
+  }

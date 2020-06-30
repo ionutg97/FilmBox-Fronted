@@ -19,6 +19,7 @@ export const uploadVideo = (pathMovie) => {
   };
 
 export const saveComment = (content,idUser,idMovie) =>{
+ // console.log("saveComment ", content,idUser,idMovie);
   POST(`http://localhost:8087/comment`,
          {
           "content":content,
@@ -47,7 +48,7 @@ export const getAllComm = (idMovie) =>{
   GET(`http://localhost:8087/comment/${idMovie}`)
   .then(response => {
    // response.data
-   console.log(response)
+   console.log("getAllComm",idMovie," ",response.data)
   })
   .catch(err => {
     console.log(err);

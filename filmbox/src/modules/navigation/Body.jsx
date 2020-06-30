@@ -8,6 +8,7 @@ import { isLoggedin } from '../common/utils';
 import Explore from '../dashboardFilm/container/Explore';
 import Notification from '../notification/containers/Notification';
 import ChatBox from '../dashboardFilm/componets/ChatBox';
+import Navigation from '../navigation/Navigation';
 
 const PrivateRoute = ({ Component, path, loggedIn }) => (
     <Route path={path}
@@ -25,7 +26,7 @@ const PrivateRoute = ({ Component, path, loggedIn }) => (
 
 const Body = () => (
     <div>
-        <Helmet bodyAttributes={{ style: 'background-color : #C0C0C0' }} />
+        <Helmet bodyAttributes={{ style: 'background-color : #C0C0C0' }} /> 
         <BrowserRouter>
             <Switch>
 {/* 
@@ -35,7 +36,7 @@ const Body = () => (
             <Route path="/login" component={FirstPage} />} */}
 
                 <Route exect path="/notification" component={Notification}></Route>
-                <Route exect path="/account/video" component={Explore}></Route>
+                <Route exect path="/account/video" component={List}></Route>
                 <Route exect path="/chat/video" component={ChatBox}></Route>
                 <Route path="/login" component={FirstPage}></Route>
             </Switch>
