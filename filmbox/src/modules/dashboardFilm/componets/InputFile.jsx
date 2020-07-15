@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 
-import { StyledLabel, HiddenInput, StyledUploadInput, InputHint, StyledEditError, UploadButton, FileInputContainer } from './UserFileInputMovieStyledComps';
+import { StyledLabel, HiddenInput, StyledUploadInput, InputHint,
+     StyledEditError, UploadButton, FileInputContainer,
+     StyledEditSucces } from './UserFileInputMovieStyledComps';
 
 import {uploadVideo} from '../actions/Action';
 
@@ -56,21 +58,23 @@ getLabelText() {
 
 onChange = (event) => {
     const file = event.target.files[0];
-    let fileError = null;
-    let format = file.name.split('.');
-    let extension = format[format.length-1];
-   
-    if ( !this.SUPPORTED_FORMATS.includes(extension))
-        fileError = `Formats supported: ${this.SUPPORTED_FORMATS.map(item => item.toUpperCase()).join(', ')}`;
+    if(file){
+        let fileError = null;
+        let format = file.name.split('.');
+        let extension = format[format.length-1];
+    
+        if ( !this.SUPPORTED_FORMATS.includes(extension))
+            fileError = `Formats supported: ${this.SUPPORTED_FORMATS.map(item => item.toUpperCase()).join(', ')}`;
 
-    if (fileError === null) {
-        this.setState({ error: null });
-        this.setState({ selectedFile: file.name })
-       // readFile(file, this.onRead);
-    }
-    else {
-        this.setState({ uploadedFile: null });
-        this.setState({ error: fileError })
+        if (fileError === null) {
+            this.setState({ error: null });
+            this.setState({ selectedFile: file.name })
+        // readFile(file, this.onRead);
+        }
+        else {
+            this.setState({ uploadedFile: null });
+            this.setState({ error: fileError })
+        }
     }
 }
 
@@ -97,12 +101,20 @@ getFileNames = () => {
 }
 
 uploadVideoFunction = () =>{
-    this.props.uploadVideo("C:\\Users\\ionut\\OneDrive\\Documents\\Licenta\\Backend\\Repository\\FilmBox\\discovery-server\\videos\\"+this.state.selectedFile);
-    // if(this.props.error!=="")
-    //     this.state.error = this.props.error;
-    // else
-    // this.state.error= "Succesfully upload!";
-
+   
+    if( this.state.selectedFile===null){
+        this.setState({ error: "Upload File is empty"});
+    }
+    else{
+    this.props.uploadVideo("C:\\Users\\ionut\\OneDrive\\Documents\\Licenta\\Backend\\Repository\\FilmBox\\discovery-server\\videos\\"+this.state.selectedFile);    
+        if(this.props.error!==""){
+            this.state.error = this.props.error;
+        }
+        // else{
+        //     if(this.props.uploadVideo)
+        //     this.setState({ error: "Upload File is empty"});
+        // }
+    }
 }
 
 deleteCallback = () => {
@@ -126,17 +138,21 @@ render() {
                 <UploadButton isValid={true} onClick={this.uploadVideoFunction}>Upload</UploadButton>
             </FileInputContainer>
             <InputHint><br />Formats supported: WEBM</InputHint>
-            
             <StyledEditError>{this.state.error} </StyledEditError>
         </form>
     )
 }
-
 }
+
+const mapStateToProps = state => ({
+    error: state.dashboardMovie.dashboardMovie.error,
+    uploadVideo: state.dashboardMovie.dashboardMovie.uploadVideo
+})
+
 function mapDispatchToProps(dispatch) {
     return {
         dispatch,
         ...bindActionCreators({uploadVideo}, dispatch)
     }
 }
-export default connect(null,mapDispatchToProps)(InputFile);
+export default connect(mapStateToProps,mapDispatchToProps)(InputFile);

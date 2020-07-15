@@ -25,6 +25,7 @@ export class List extends React.Component {
       mediaSource: null,
       video: null,
       sourceBuffer: null,
+      videoLoaded:false,
       noFiles: 3,
       //noFiles: 6,
       listId: ["5ef5054036d1a00001ac29df", "5ef5054136d1a00001ac29e0","5ef5054236d1a00001ac29e1"]
@@ -38,11 +39,20 @@ export class List extends React.Component {
       this.state.noFiles=this.props.allIdChunck.length;
       this.state.listId= this.props.allIdChunck
     }
-
+    var videoLoaded={loaded:false};
     var queue = [];
-    this.fetch( 0, queue)
+    this.fetch( 0, queue, videoLoaded)
+    //this.newFetch(0,queue,videoLoaded);
 
     setTimeout(() => {
+      
+      queue=this.toQueue(queue);
+      if(videoLoaded.loaded)
+      {
+        return;
+      }
+      videoLoaded.loaded=true;
+        console.log("Started from time out")
       this.state.video = document.getElementById('myVideo');
       this.state.video.crossOrigin = 'anonymous';
 
@@ -53,16 +63,13 @@ export class List extends React.Component {
       } else {
         console.error('Unsupported MIME type or codec: ', this.state.mimeCodec);
       }
-
-    }, 5000);
+    }, 10000);
   }
 
-  playVideo (){
-    console.log("play   .............");
-    var queue = [];
-    this.fetch( 0, queue)
+   playVideo =(queue)=>{
 
-    setTimeout(() => {
+      queue=this.toQueue(queue); 
+      console.log("Started from play video")
       this.state.video = document.getElementById('myVideo');
       this.state.video.crossOrigin = 'anonymous';
 
@@ -73,15 +80,14 @@ export class List extends React.Component {
       } else {
         console.error('Unsupported MIME type or codec: ', this.state.mimeCodec);
       }
-
-    }, 2000);
   }
 
   sourceOpen = (queue) => {
     console.log(queue);
     var newMediaSource = this.state.mediaSource;
     this.state.sourceBuffer = newMediaSource.addSourceBuffer(this.state.mimeCodec);
-    this.state.sourceBuffer.appendBuffer(queue.shift());
+    if(queue.length)
+      this.state.sourceBuffer.appendBuffer(queue.shift());
 
     this.state.sourceBuffer.addEventListener('updateend', () => {
       if (queue.length) {
@@ -90,7 +96,7 @@ export class List extends React.Component {
     }, false);
   };
 
-  fetch = (index,queue) => {
+  fetch = (index,queue,videoLoaded) => {
   
     var url = `http://localhost:8088/mongo/video?video=${this.state.listId[index]}`;
     var xhr = new XMLHttpRequest;
@@ -100,12 +106,54 @@ export class List extends React.Component {
     xhr.onload = () => {
       queue.push(xhr.response);
       index++;
-      if (index == (this.state.noFiles))
+      if (index == (this.state.noFiles-1))
+      {
+        if(videoLoaded.loaded==false){
+          this.playVideo(queue);
+          videoLoaded.loaded=true;
+        }
         return;
-      this.fetch( index ,queue);
+      }
+      this.fetch( index ,queue, videoLoaded);
     };
     xhr.send();
   };
+
+  newFetch= (index,dictionary,videoLoaded) =>{
+    var url = `http://localhost:8088/mongo/video?video=${this.state.listId[index]}`;
+    var xhr = new XMLHttpRequest;
+    xhr.open('get', url);
+    xhr.setRequestHeader("Authorization", localStorage.getItem("jwt"))
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = () => {
+      dictionary[index]=xhr.response;
+      console.log("new fetch",dictionary);
+      if(dictionary.length==(this.state.noFiles-1)){
+        if(videoLoaded.loaded==false){
+          this.playVideo(dictionary);
+          videoLoaded.loaded=true;
+        }
+      }
+    }
+    xhr.send();
+    if (index == (this.state.noFiles-2))
+      return;
+    setTimeout(()=>{this.newFetch(index+1, dictionary,videoLoaded)},500);
+  }
+
+  toQueue =(dictionary)=>{
+    var queue = [];
+    for(var i=0 ;i<dictionary.length;i++)
+    {
+      if(dictionary[i]!==undefined)
+      {
+        queue.push(dictionary[i]);
+      }
+      else
+        break;
+    }
+    return queue;
+  }
 
   formatNumber(number) {
     if (number < 10)
@@ -118,9 +166,9 @@ export class List extends React.Component {
   }
 
 
-  playVideo (){
-    console.log("play   .............");
-  }
+  // playVideo (){
+  //   console.log("play   .............");
+  // }
 
   render() {
     return (
@@ -133,7 +181,8 @@ export class List extends React.Component {
             autoplay="false"
             muted="muted"
             controls="true"
-            onPlay={this.playVideo}>
+            //onPlay={this.playVideo}
+            >
           </MyVideo>
         </InputFileArrea>
         <InputFileArrea>
@@ -149,3 +198,22 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps,null)(List)  
+ // playVideo =()=>{
+  //   console.log("play   .............");
+  //   var queue = [];
+  //   this.fetch( 0, queue)
+
+  //   setTimeout(() => {
+  //     this.state.video = document.getElementById('myVideo');
+  //     this.state.video.crossOrigin = 'anonymous';
+
+  //     if ('MediaSource' in window && MediaSource.isTypeSupported(this.state.mimeCodec)) {
+  //       this.state.mediaSource = new MediaSource;
+  //       this.state.video.src = URL.createObjectURL(this.state.mediaSource);
+  //       this.state.mediaSource.addEventListener('sourceopen', () => this.sourceOpen(queue));
+  //     } else {
+  //       console.error('Unsupported MIME type or codec: ', this.state.mimeCodec);
+  //     }
+
+  //   }, 2000);
+  // }

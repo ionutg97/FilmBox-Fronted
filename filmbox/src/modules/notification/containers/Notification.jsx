@@ -22,12 +22,11 @@ export class Notification extends React.Component {
     }
 
     getUserInfoById = (id) => {
-        console.log("id ->",id)
+        //console.log("id ->",id)
          GET(`http://localhost:8091/user/${id}/profile`)
           .then(response => { 
-           console.log(response.data.name)
            this.state.userName=response.data.name
-           console.log(this.state.userName)
+          // console.log(this.state.userName)
           })
           .catch(err => {
             console.log(err);
@@ -43,11 +42,11 @@ export class Notification extends React.Component {
     render() {
     const columns =[
         {
-            Header: "User name",
+            Header: "Register id",
             Cell: props =>{
-                this.getUserInfoById(props.original.id)
+                //this.getUserInfoById(props.original.id)
                 return(
-                    <div>{console.log(this.state.userName)}</div>
+                    <div>{props.original.id}</div>
                 )
             }    
         },

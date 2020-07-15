@@ -69,6 +69,13 @@ export const StyledEditError = styled.span`
     line-height: 1rem;
     color: #B52E40;
 `
+export const StyledEditSucces = styled.span`
+    min-height: 1rem;
+    font-family: 'Roboto';
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #B52E40;
+`
 
 export const UploadButton = styled.label`
     box-sizing: border-box;

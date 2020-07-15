@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from 'react-redux';
 import {withRouter} from 'react-router-dom';
 
-import {getAllComm,saveComment} from '../actions/Action';
+import {getAllComm, saveComment, getNumberComm, deleteComm} from '../actions/Action';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 import {getProfile} from '../../login/action/Action';
 
 import {CommentFooterDelete,CommentFooter,CommentBody,
@@ -16,27 +16,29 @@ class CommentaryBox extends React.Component {
       
       this.state = {
         showComments: false,
-        comments: [
-          {id: 1, author: "landiggity", body: "This is my first comment on this forum so don't be a dick"},
-          {id: 2, author: "scarlett-jo", body: "That's a mighty fine comment you've got there my good looking fellow..."},
-          {id: 3, author: "rosco", body: "What is the meaning of all of this 'React' mumbo-jumbo?"}
-        ]
+        currentNumberCommCount: 0,
+        comments: []
       };
     }
 
     componentDidMount () {
+      
       this.props.getProfile();
+      this.props.getAllComm(this.props.idMovie);
+      //console.log("all comments", this.props.idMovie)
+      this.pullingMethod();
     }
     
     render () {
       getAllComm(this.props.idMovie);
-      const comments = this._getComments();
+      this.state.comments = this._getComments();
+      //console.log("render comm", this.state.comments)
       let commentNodes;
       let buttonText = 'Show Comments';
       
       if (this.state.showComments) {
         buttonText = 'Hide Comments';
-        commentNodes = <div className="comment-list">{comments}</div>;
+        commentNodes = <div className="comment-list">{ this.state.comments}</div>;
       }
       
       return(
@@ -52,20 +54,22 @@ class CommentaryBox extends React.Component {
           </CommentReveal>
           <h3>Comments</h3>
           <CommentCount>
-            {this._getCommentsTitle(comments.length)}
+            {
+                this._getCommentsTitle( this.state.comments.length)
+            }
           </CommentCount>
           {commentNodes}
         </CommentBox>  
       );
     } // end render
     
-    _addComment(author, body) {
+    _addComment(idUser, content) {
       const comment = {
-        id: this.state.comments.length + 1,
-        author,
-        body
+        id: this.props.comments.length + 1,
+        idUser,
+        content
       };
-      this.setState({ comments: this.state.comments.concat([comment]) }); // *new array references help React stay fast, so concat works better than push here.
+      this.setState({ comments: this.props.comments.concat([comment]) }); 
     }
     
     _handleClick() {
@@ -74,31 +78,50 @@ class CommentaryBox extends React.Component {
       });
     }
     
-    _getComments() {    
-      return this.state.comments.map((comment) => { 
+    _getComments() {   
+      if(this.props.comments ){
+        //console.log("comment",this.props.comments)
+      return this.props.comments.map((comment) => { 
         return (
           <CommentClass 
-            author={comment.author} 
-            body={comment.body} 
-            key={comment.id} />
+            idUser={comment.idUser}
+            content={comment.content}
+            id={comment.id} />
         ); 
       });
     }
+    }
     
     _getCommentsTitle(commentCount) {
-      if (commentCount === 0) {
+      this.state.currentNumberCommCount=commentCount;
+      if (this.state.currentNumberCommCount === 0) {
         return 'No comments yet';
-      } else if (commentCount === 1) {
+      } else if (this.state.currentNumberCommCount === 1) {
         return "1 comment";
       } else {
-        return `${commentCount} comments`;
+        return `${this.state.currentNumberCommCount} comments`;
       }
+    }
+
+    pullingMethod=()=>{
+      console.log("pulling method")
+      let currentNumberComm= this.props.numberComm;
+     // clearTimeout(this.pullingMethod())
+      this.props.getNumberComm(this.props.idMovie);
+      if(this.state.currentNumberCommCount != currentNumberComm)
+      {
+        //console.log("equals verify",this.state.currentNumberCommCount," ",currentNumberComm)
+        this.state.currentNumberCommCount = currentNumberComm;
+        this.props.getAllComm(this.props.idMovie);
+        clearTimeout(this.pullingMethod())
+      }
+      setTimeout(this.pullingMethod, 10000);
     }
   } // end CommentBox component
   
   class CommentaryForm extends React.Component {
     render() {
-      console.log("props",this.props.name)
+      //console.log("props",this.props.name)
       return (
         <CommentForm onSubmit={this._handleSubmit.bind(this)}>
           <CommentFormField>
@@ -123,29 +146,47 @@ class CommentaryBox extends React.Component {
   } // end CommentForm component
   
   class CommentClass extends React.Component {
+    constructor() {
+      super();
+    }
     render () {
       return(
         <Comment>
-          <p className="comment-header">{this.props.author}</p>
-          <CommentBody>- {this.props.body}</CommentBody>
+          <p className="comment-header">{this.props.idUser}</p>
+          <CommentBody>- {this.props.content}</CommentBody>
           <CommentFooter>
-            <CommentFooterDelete href="#"  onClick={this._deleteComment}>Delete Comment</CommentFooterDelete>
+            {this.displayDeleteOption()}
           </CommentFooter>
         </Comment>
       );
     }
-    _deleteComment() {
-      alert("-- DELETE Comment Functionality COMMING SOON...");
+
+    deleteComment = (idComm) => {
+      deleteComm(idComm);
+      getAllComm(this.props.idMovie);
     }
+
+    displayDeleteOption =()=>{
+      
+      if(localStorage.getItem("role")==="admin")
+        return(<CommentFooterDelete href="#"  onClick={()=>{this.deleteComment(this.props.id)}}>Delete Comment</CommentFooterDelete>)
+      else
+        return null;
+    }
+
   }
   
   const mapStateToProps = state => ({
     idMovie: state.notification.notification.idMovie,
-    name: state.login.login.name
+    name: state.login.login.name,
+    comments: state.dashboardMovie.dashboardMovie.comments,  
+    numberComm: state.dashboardMovie.dashboardMovie.numberComm
   });
 
   const mapDispatchToProps = dispatch => ({
-    getProfile: () => dispatch(getProfile())    
-});
+    getProfile: () => dispatch(getProfile()),
+    getAllComm: (idMovie) => dispatch(getAllComm(idMovie)),
+    getNumberComm: (idMovie) =>dispatch(getNumberComm(idMovie))   
+  });
 
   export default connect(mapStateToProps,mapDispatchToProps)(CommentaryBox);

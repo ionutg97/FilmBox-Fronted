@@ -14,7 +14,7 @@ const DisplayPath = styled.p`
 
 export class UploadFile extends React.Component{
     onChange = (event) => {
-        console.log(document.getElementById("myFile").value);
+        console.log("myFile",document.getElementById("myFile").value);
         document.getElementById("demo").innerHTML=document.getElementById("myFile").value;    
     }
 

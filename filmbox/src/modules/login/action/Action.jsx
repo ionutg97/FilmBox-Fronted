@@ -19,15 +19,15 @@ const parseJWT = jwt => {
 };
 
 export const getProfile = () => {
-  console.log("getProfile")
+  //console.log("getProfile")
   return dispatch => {
-    console.log("gete",localStorage.getItem("loggedUserId"))
+    //console.log("gete",localStorage.getItem("loggedUserId"))
     return axios
     .get(`http://localhost:8091/user/${localStorage.getItem("loggedUserId")}/profile`, {
         headers: { "Authorization": `Bearer ${localStorage.getItem("jwt")}` }
     })
     .then(response =>{
-      console.log("holla",response.data.name)
+      //console.log("holla",response.data.name)
       dispatch({
         type: "PROFILE",
         payload: {

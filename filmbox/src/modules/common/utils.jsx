@@ -27,4 +27,10 @@ export const GET = (url, crossDomain = true) => {
 
 };
 
-//export const DELETE = (url,)
+export const DELETE = (url, crossDomain = true) => {
+    return axios
+        .delete(url,{
+            headers: { "Authorization": `Bearer ${localStorage.getItem("jwt")}` },
+            crossDomain
+        })
+}
