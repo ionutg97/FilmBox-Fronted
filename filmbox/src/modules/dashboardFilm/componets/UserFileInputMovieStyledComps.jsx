@@ -63,18 +63,18 @@ export const StyledError = styled.span`
     margin-left: 1rem;
 `
 export const StyledEditError = styled.span`
-    min-height: 1rem;
+    min-height: 1.5rem;
     font-family: 'Roboto';
-    font-size: 0.75rem;
+    font-size: 1.2rem;
     line-height: 1rem;
     color: #B52E40;
 `
 export const StyledEditSucces = styled.span`
-    min-height: 1rem;
+    min-height: 1.5rem;
     font-family: 'Roboto';
-    font-size: 0.75rem;
+    font-size: 1.2rem;
     line-height: 1rem;
-    color: #B52E40;
+    color: #00d800;
 `
 
 export const UploadButton = styled.label`

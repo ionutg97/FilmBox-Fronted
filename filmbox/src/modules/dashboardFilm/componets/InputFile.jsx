@@ -34,6 +34,7 @@ state = {
     selectedFile: null,
     uploadedFile: null,
     error: null,
+    succesUpload: null
 };
 SUPPORTED_FORMATS = ['webm'];
 
@@ -110,10 +111,10 @@ uploadVideoFunction = () =>{
         if(this.props.error!==""){
             this.state.error = this.props.error;
         }
-        // else{
-        //     if(this.props.uploadVideo)
-        //     this.setState({ error: "Upload File is empty"});
-        // }
+        else{
+            if(this.props.uploadVideo)
+            this.setState({ succesUpload: "Succes upload!"});
+        }
     }
 }
 
@@ -139,6 +140,8 @@ render() {
             </FileInputContainer>
             <InputHint><br />Formats supported: WEBM</InputHint>
             <StyledEditError>{this.state.error} </StyledEditError>
+            <StyledEditSucces>{this.state.succesUpload}</StyledEditSucces>
+
         </form>
     )
 }

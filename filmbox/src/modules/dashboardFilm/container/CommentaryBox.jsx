@@ -113,7 +113,6 @@ class CommentaryBox extends React.Component {
         //console.log("equals verify",this.state.currentNumberCommCount," ",currentNumberComm)
         this.state.currentNumberCommCount = currentNumberComm;
         this.props.getAllComm(this.props.idMovie);
-        clearTimeout(this.pullingMethod())
       }
       setTimeout(this.pullingMethod, 10000);
     }
